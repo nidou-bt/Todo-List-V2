@@ -1,6 +1,6 @@
 interface IButton {
   children: string,
-  type: "button" | "submit" | "reset" | undefined,
+  type: 'button' | 'submit' | 'reset' | undefined,
   className?: string,
   disabled?: boolean,
   onClick?: () => void,
@@ -8,7 +8,7 @@ interface IButton {
 
 function Button({ children, type, disabled, className, onClick }: IButton): JSX.Element {
   return(
-    <button type={type} className={className ? className : undefined} disabled={disabled || false} onClick={onClick || undefined} >
+    <button type={type} disabled={disabled || false} onClick={onClick || undefined} className={className === 'signIn' ? 'btn-sign' : undefined} >
       {children}
     </button>
   );

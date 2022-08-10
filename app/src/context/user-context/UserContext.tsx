@@ -1,16 +1,14 @@
-import { createContext, useEffect, useState } from "react";
+import { createContext, useEffect, useState } from 'react';
 import {
-  Auth,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
-  UserCredential,
   User,
-} from "firebase/auth";
-import { FirebaseError } from "firebase/app";
-import { auth } from "../../shared/firebase";
-import { errorTypes, TUser } from "../../shared/types";
+} from 'firebase/auth';
+import { auth } from 'shared/firebase';
+import { fetchUserApiFirebaseIn, fetchUserApiFirebaseOut } from 'shared/execRequestFirebase';
+import { TUser } from 'shared/types';
 
 interface IUserContext {
   currentUser: User;
@@ -24,37 +22,6 @@ interface IUserContextProvider {
   children: React.ReactNode;
 }
 
-interface IFetchUserApiFirebase extends TUser {
-  fetchUser: (
-    auth: Auth,
-    email: string,
-    password: string
-  ) => Promise<UserCredential>;
-}
-
-const fetchUserApiFirebase = async ({
-  fetchUser,
-  email,
-  password,
-}: IFetchUserApiFirebase): Promise<UserCredential | void> => {
-  try {
-    const result = await fetchUser(auth, email, password);
-    return result;
-  } catch (err) {
-    if (err instanceof FirebaseError) {
-      return Promise.reject({
-        type: errorTypes.ERROR_TYPE_FIREBASE,
-        code: err.code,
-        status: err.cause,
-      });
-    }
-    return Promise.reject({
-      type: errorTypes.ERROR_TYPE_UNKNOWN,
-      error: err,
-    });
-  }
-};
-
 export const UserContext = createContext<IUserContext>({} as IUserContext);
 
 export function UserContextProvider({ children }: IUserContextProvider) {
@@ -67,7 +34,7 @@ export function UserContextProvider({ children }: IUserContextProvider) {
       if (user) {
         setCurrentUser(user);
         setIsLoggedIn(true);
-        console.log("user", user);
+        console.log('user', user);
       } else {
         setIsLoggedIn(false);
       }
@@ -78,51 +45,41 @@ export function UserContextProvider({ children }: IUserContextProvider) {
   }, []);
 
   useEffect(() => {
-    console.log("isLoggedIn", isLoggedIn);
+    console.log('isLoggedIn', isLoggedIn);
   }, [isLoggedIn]);
 
   const register = async ({
     email,
     password,
     firstName,
-    lastName
+    lastName,
   }: TUser): Promise<void> => {
-    await fetchUserApiFirebase({
-      fetchUser: createUserWithEmailAndPassword,
-      email,
-      password,
-    });
+    if (email&&password) {
+      await fetchUserApiFirebaseIn({
+        fetchUserIn: createUserWithEmailAndPassword,
+        email,
+        password,
+      });
+    }
+
     // register api for the full data of user
-    console.log("user", firstName, lastName);
     return;
   };
 
   const login = async ({ email, password }: TUser): Promise<void> => {
-    await fetchUserApiFirebase({
-      fetchUser: signInWithEmailAndPassword,
+    await fetchUserApiFirebaseIn({
+      fetchUserIn: signInWithEmailAndPassword,
       email,
       password,
-    });
+    }).catch((err: any) => console.log({ err }));
     return;
   };
 
   const logout = async (): Promise<void> => {
-    try {
-      await signOut(auth);
-      return;
-    } catch (err) {
-      if (err instanceof FirebaseError) {
-        return Promise.reject({
-          type: errorTypes.ERROR_TYPE_FIREBASE,
-          code: err.code,
-          status: err.cause,
-        });
-      }
-      return Promise.reject({
-        type: errorTypes.ERROR_TYPE_UNKNOWN,
-        error: err,
-      });
-    }
+    await fetchUserApiFirebaseOut({
+      fetchUserOut: signOut,
+    });
+    return;
   };
 
   return (

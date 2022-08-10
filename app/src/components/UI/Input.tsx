@@ -1,26 +1,16 @@
-import { Field, ErrorMessage } from "formik";
+import { useField } from 'formik';
+import { forwardRef, InputHTMLAttributes } from 'react';
 
-type IInput = {
-  children: string,
-  id: string,
-  name: string,
-  type: string,
-  className?: {label?: string, field?: string},
-}
+type Props = InputHTMLAttributes<HTMLInputElement> & {
+  error?: string;
+};
 
-function Input({ children, id, name, type, className }: IInput): JSX.Element {
-  return(
-    <div>
-      <label htmlFor={id || name} className={className?.label ? className.label : undefined}>{children}</label>
-      <Field 
-        id={id}
-        name={name}
-        type={type}
-        className={className?.field ? className.field : undefined}
-      />
-      <ErrorMessage name={name} />
-    </div>
-  );
-}
+const Input = forwardRef<HTMLInputElement, Props>(
+  ({ ...props }, ref): JSX.Element => {
+    const [field] = useField({...props, name: props.name!});
+
+    return <input ref={ref} {...props} {...field} className={props.className === 'signIn' ? 'ipt-sign' : undefined} />;
+  }
+);
 
 export default Input;
