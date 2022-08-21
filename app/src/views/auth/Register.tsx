@@ -23,7 +23,7 @@ const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),
   password: Yup.string()
     .max(15, 'Must be 15 characters or less')
-    .min(5,'Must be 5 characters or more')
+    .min(5, 'Must be 5 characters or more')
     .required('Required'),
 });
 
@@ -56,16 +56,36 @@ function Register(): JSX.Element {
         <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
           <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
             <Form className='space-y-6'>
-              <FormControl id='firstName' name='firstName' type='firstName' className='signIn'>
+              <FormControl
+                id='firstName'
+                name='firstName'
+                type='firstName'
+                variant='signIn'
+              >
                 First Name
               </FormControl>
-              <FormControl id='lastName' name='lastName' type='lastName' className='signIn'>
+              <FormControl
+                id='lastName'
+                name='lastName'
+                type='lastName'
+                variant='signIn'
+              >
                 Last Name
               </FormControl>
-              <FormControl id='email' name='email' type='email' className='signIn'>
+              <FormControl
+                id='email'
+                name='email'
+                type='email'
+                variant='signIn'
+              >
                 Email Address
               </FormControl>
-              <FormControl id='password' name='password' type='password' className='signIn'>
+              <FormControl
+                id='password'
+                name='password'
+                type='password'
+                variant='signIn'
+              >
                 Password
               </FormControl>
               <div className='text-sm text-center'>
@@ -77,7 +97,9 @@ function Register(): JSX.Element {
                 </Link>
               </div>
               <div>
-                <Button type='submit'>Submit</Button>
+                <Button type='submit' className='btn-sign'>
+                  Submit
+                </Button>
               </div>
             </Form>
           </div>

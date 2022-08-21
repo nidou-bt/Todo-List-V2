@@ -9,7 +9,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
   ({ ...props }, ref): JSX.Element => {
     const [field] = useField({...props, name: props.name!});
 
-    return <input ref={ref} {...props} {...field} className={props.className === 'signIn' ? 'ipt-sign' : undefined} />;
+    return <input ref={ref} {...props} {...field} />;
   }
 );
 

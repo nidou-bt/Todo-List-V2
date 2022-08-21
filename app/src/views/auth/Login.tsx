@@ -1,10 +1,10 @@
-import { Formik, Form } from 'formik';
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
+import { UserContext } from 'context/user-context/UserContext';
 import Button from 'components/UI/Button';
 import FormControl from 'components/UI/FormControl';
-import { UserContext } from 'context/user-context/UserContext';
 
 type TInitialValues = {
   email: string;
@@ -26,10 +26,9 @@ function Login(): JSX.Element {
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, actions) => {
         setTimeout(() => {
           login({ email: values.email, password: values.password });
-          setSubmitting(false);
         }, 400);
       }}
     >
@@ -37,22 +36,32 @@ function Login(): JSX.Element {
         <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
           <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
             <Form className='space-y-6'>
-              <FormControl id='email' name='email' type='email' className='signIn'>
+              <FormControl
+                id='email'
+                name='email'
+                type='email'
+                variant='signIn'
+              >
                 Email Address
               </FormControl>
-              <FormControl id='password' name='password' type='password' className='signIn'>
+              <FormControl
+                id='password'
+                name='password'
+                type='password'
+                variant='signIn'
+              >
                 Password
               </FormControl>
               <div className='flex items-center justify-between'>
                 <div className='flex items-center'>
-                <div className='text-sm'>
-                  <Link
-                    to={'/sign-up'}
-                    className='font-medium text-indigo-600 hover:text-indigo-500'
-                  >
-                    SignUp
-                  </Link>
-                </div>
+                  <div className='text-sm'>
+                    <Link
+                      to={'/sign-up'}
+                      className='font-medium text-indigo-600 hover:text-indigo-500'
+                    >
+                      SignUp
+                    </Link>
+                  </div>
                 </div>
                 <div className='text-sm'>
                   <a
@@ -64,7 +73,9 @@ function Login(): JSX.Element {
                 </div>
               </div>
               <div>
-                <Button type='submit' className='signIn'>Submit</Button>
+                <Button type='submit' className='btn-sign'>
+                  Submit
+                </Button>
               </div>
             </Form>
           </div>
