@@ -12,7 +12,7 @@ import { TUser } from 'shared/types';
 
 interface IUserContext {
   currentUser: User;
-  register: (user: TUser) => Promise<void>;
+  register: (user: Required<TUser>) => Promise<void>;
   login: (user: TUser) => Promise<void>;
   logout: () => Promise<void>;
   isLoggedIn: boolean;
@@ -53,7 +53,7 @@ export function UserContextProvider({ children }: IUserContextProvider) {
     password,
     firstName,
     lastName,
-  }: TUser): Promise<void> => {
+  }: Required<TUser>): Promise<void> => {
     if (email&&password) {
       await fetchUserApiFirebaseIn({
         fetchUserIn: createUserWithEmailAndPassword,

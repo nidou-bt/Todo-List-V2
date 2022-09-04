@@ -1,17 +1,12 @@
-import { useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { UserContext } from 'context/user-context/UserContext';
 import Button from 'components/UI/Button';
-import FormControl from 'components/UI/FormControl';
+import FormControl from 'components/UI/FormInput';
+import useUser from 'context/user-context/useUser';
+import { TUser } from 'shared/types';
 
-type TInitialValues = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-};
+type TInitialValues = Required<TUser>;
 
 const validationSchema = Yup.object({
   firstName: Yup.string()
@@ -28,7 +23,7 @@ const validationSchema = Yup.object({
 });
 
 function Register(): JSX.Element {
-  const { register } = useContext(UserContext);
+  const { onRegister } = useUser();
   const initialValues: TInitialValues = {
     firstName: '',
     lastName: '',
@@ -42,7 +37,7 @@ function Register(): JSX.Element {
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {
         setTimeout(() => {
-          register({
+          onRegister({
             firstName: values.firstName,
             lastName: values.lastName,
             email: values.email,
@@ -56,36 +51,16 @@ function Register(): JSX.Element {
         <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
           <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
             <Form className='space-y-6'>
-              <FormControl
-                id='firstName'
-                name='firstName'
-                type='firstName'
-                variant='signIn'
-              >
+              <FormControl id='firstName' name='firstName' type='firstName'>
                 First Name
               </FormControl>
-              <FormControl
-                id='lastName'
-                name='lastName'
-                type='lastName'
-                variant='signIn'
-              >
+              <FormControl id='lastName' name='lastName' type='lastName'>
                 Last Name
               </FormControl>
-              <FormControl
-                id='email'
-                name='email'
-                type='email'
-                variant='signIn'
-              >
+              <FormControl id='email' name='email' type='email'>
                 Email Address
               </FormControl>
-              <FormControl
-                id='password'
-                name='password'
-                type='password'
-                variant='signIn'
-              >
+              <FormControl id='password' name='password' type='password'>
                 Password
               </FormControl>
               <div className='text-sm text-center'>

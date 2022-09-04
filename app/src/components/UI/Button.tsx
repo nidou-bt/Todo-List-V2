@@ -1,8 +1,6 @@
 import { ButtonHTMLAttributes } from 'react';
 
-type IButton = ButtonHTMLAttributes<HTMLButtonElement> & {
-  error?: string;
-};
+type IButton = ButtonHTMLAttributes<HTMLButtonElement>;
 
 function Button(props: IButton): JSX.Element {
   return(

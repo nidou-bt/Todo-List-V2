@@ -1,15 +1,15 @@
-import { useField } from 'formik';
+import { useField, getIn } from 'formik';
 import { forwardRef, InputHTMLAttributes } from 'react';
 
 type Props = InputHTMLAttributes<HTMLInputElement> & {
-  error?: string;
+  error?: boolean;
 };
 
 const Input = forwardRef<HTMLInputElement, Props>(
-  ({ ...props }, ref): JSX.Element => {
-    const [field] = useField({...props, name: props.name!});
+  ({ error, ...props }, ref): JSX.Element => {
+    const [field] = useField({ ...props, name: props.name! });
 
-    return <input ref={ref} {...props} {...field} />;
+    return <input ref={ref} style={error ? { borderColor: 'red'} : {}} {...props} {...field} />;
   }
 );
 

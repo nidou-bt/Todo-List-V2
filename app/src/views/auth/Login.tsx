@@ -1,15 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import { UserContext } from 'context/user-context/UserContext';
 import Button from 'components/UI/Button';
-import FormControl from 'components/UI/FormControl';
+import FormControl from 'components/UI/FormInput';
+import useUser from 'context/user-context/useUser';
+import { TUser } from 'shared/types';
 
-type TInitialValues = {
-  email: string;
-  password: string;
-};
+type TInitialValues = Pick<TUser, 'email' | 'password'>;
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),
@@ -19,7 +16,7 @@ const validationSchema = Yup.object({
 });
 
 function Login(): JSX.Element {
-  const { login } = useContext(UserContext);
+  const { onLogin } = useUser();
   const initialValues: TInitialValues = { email: '', password: '' };
 
   return (
@@ -28,7 +25,7 @@ function Login(): JSX.Element {
       validationSchema={validationSchema}
       onSubmit={(values, actions) => {
         setTimeout(() => {
-          login({ email: values.email, password: values.password });
+          onLogin({ email: values.email, password: values.password });
         }, 400);
       }}
     >
@@ -36,20 +33,10 @@ function Login(): JSX.Element {
         <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
           <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
             <Form className='space-y-6'>
-              <FormControl
-                id='email'
-                name='email'
-                type='email'
-                variant='signIn'
-              >
+              <FormControl id='email' name='email' type='email'>
                 Email Address
               </FormControl>
-              <FormControl
-                id='password'
-                name='password'
-                type='password'
-                variant='signIn'
-              >
+              <FormControl id='password' name='password' type='password'>
                 Password
               </FormControl>
               <div className='flex items-center justify-between'>
