@@ -1,15 +1,11 @@
-interface IButton {
-  children: string,
-  type: "button" | "submit" | "reset" | undefined,
-  className?: string,
-  disabled?: boolean,
-  onClick?: () => void,
-}
+import { ButtonHTMLAttributes } from 'react';
 
-function Button({ children, type, disabled, className, onClick }: IButton): JSX.Element {
+type IButton = ButtonHTMLAttributes<HTMLButtonElement>;
+
+function Button(props: IButton): JSX.Element {
   return(
-    <button type={type} className={className ? className : undefined} disabled={disabled || false} onClick={onClick || undefined} >
-      {children}
+    <button {...props}>
+      {props.children}
     </button>
   );
 }

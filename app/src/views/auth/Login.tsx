@@ -1,14 +1,12 @@
-import { Formik, Form, ErrorMessage } from 'formik';
-import { useContext } from 'react';
+import { Link } from 'react-router-dom';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
-import Button from '../../components/UI/Button';
-import Input from '../../components/UI/Input';
-import { UserContext } from '../../context/user-context/UserContext';
+import Button from 'components/UI/Button';
+import FormControl from 'components/UI/FormInput';
+import useUser from 'context/user-context/useUser';
+import { TUser } from 'shared/types';
 
-type TInitialValues = {
-  email: string;
-  password: string;
-};
+type TInitialValues = Pick<TUser, 'email' | 'password'>;
 
 const validationSchema = Yup.object({
   email: Yup.string().email('Invalid email address').required('Required'),
@@ -18,31 +16,58 @@ const validationSchema = Yup.object({
 });
 
 function Login(): JSX.Element {
-  const { login } = useContext(UserContext);
+  const { onLogin } = useUser();
   const initialValues: TInitialValues = { email: '', password: '' };
 
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting }) => {
+      onSubmit={(values, actions) => {
         setTimeout(() => {
-          login({ email: values.email, password: values.password });
-          setSubmitting(false);
+          onLogin({ email: values.email, password: values.password });
         }, 400);
       }}
     >
-      <Form>
-        <Input id='email' name='email' type='email'>
-          Email Address
-        </Input>
-        <ErrorMessage name='email' />
-        <Input id='password' name='password' type='password'>
-          Password
-        </Input>
-        <ErrorMessage name='password' />
-        <Button type='submit'>Submit</Button>
-      </Form>
+      <div className='min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+        <div className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'>
+          <div className='bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10'>
+            <Form className='space-y-6'>
+              <FormControl id='email' name='email' type='email'>
+                Email Address
+              </FormControl>
+              <FormControl id='password' name='password' type='password'>
+                Password
+              </FormControl>
+              <div className='flex items-center justify-between'>
+                <div className='flex items-center'>
+                  <div className='text-sm'>
+                    <Link
+                      to={'/sign-up'}
+                      className='font-medium text-indigo-600 hover:text-indigo-500'
+                    >
+                      SignUp
+                    </Link>
+                  </div>
+                </div>
+                <div className='text-sm'>
+                  <a
+                    href='#'
+                    className='font-medium text-indigo-600 hover:text-indigo-500'
+                  >
+                    Forgot your password?
+                  </a>
+                </div>
+              </div>
+              <div>
+                <Button type='submit' className='btn-sign'>
+                  Submit
+                </Button>
+              </div>
+            </Form>
+          </div>
+        </div>
+      </div>
     </Formik>
   );
 }
